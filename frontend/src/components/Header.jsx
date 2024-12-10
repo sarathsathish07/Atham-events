@@ -28,11 +28,7 @@ const Header = () => {
                 <FaSignInAlt /> Our Services
               </Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/register">
-              <Nav.Link>
-                <FaSignOutAlt /> Sign Up
-              </Nav.Link>
-            </LinkContainer>
+
           </Nav>
         </Navbar.Collapse>
       </Navbar>

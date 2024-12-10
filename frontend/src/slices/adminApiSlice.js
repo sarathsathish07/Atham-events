@@ -41,8 +41,20 @@ export const admiApiSlice=apiSlice.injectEndpoints({
                 body: data
             }),
         }),
+        fetchSelections: builder.query({
+            query: () => ({
+                url: `${ADMIN_URL}/selections`,
+                method: 'GET',
+            }),
+        }),
+        fetchSelectionById: builder.query({
+            query: (id) => ({
+                url: `${ADMIN_URL}/selections/${id}`,
+                method: 'GET',
+            }),
+        }),
 
     })
 })
 
-export const {useAdminLoginMutation,useAdminLogoutMutation,useFetchCategoriesQuery,useAddCategoryMutation,useAddItemMutation }= admiApiSlice
+export const {useAdminLoginMutation,useAdminLogoutMutation,useFetchCategoriesQuery,useAddCategoryMutation,useAddItemMutation,useFetchSelectionsQuery, useFetchSelectionByIdQuery }= admiApiSlice
