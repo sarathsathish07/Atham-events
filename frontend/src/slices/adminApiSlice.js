@@ -43,14 +43,14 @@ export const admiApiSlice=apiSlice.injectEndpoints({
         }),
         fetchSelections: builder.query({
             query: () => ({
-                url: `${ADMIN_URL}/selections`,
-                method: 'GET',
+                url: `${ADMIN_URL}/selections`, // Matches backend route
+                method: "GET",
             }),
         }),
         fetchSelectionById: builder.query({
             query: (id) => ({
-                url: `${ADMIN_URL}/selections/${id}`,
-                method: 'GET',
+                url: `${ADMIN_URL}/selections/${id}`, // Matches backend route
+                method: "GET",
             }),
         }),
 

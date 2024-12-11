@@ -12,11 +12,9 @@ function AdminSidebar() {
         <Nav.Item>
           <Link to="/admin/category" className="nav-link">Category</Link>
         </Nav.Item>
+
         <Nav.Item>
-          <Link to="/admin/add-to-list" className="nav-link">Add to List</Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Link to="/admin/customer-list" className="nav-link">Customer List</Link>
+          <Link to="/admin/selection" className="nav-link">Customer List</Link>
         </Nav.Item>
       </Nav>
     </div>

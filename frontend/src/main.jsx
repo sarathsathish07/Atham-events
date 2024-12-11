@@ -10,6 +10,7 @@ import AdminHomeScreen from './screens/adminScreens/AdminHomeScreen.jsx'
 import AdminLoginScreen from './screens/adminScreens/AdminLoginScreen.jsx'
 import EventSelectionScreen from './screens/EventSelectionScreen.jsx'
 import AdminCategoryScreen from './screens/adminScreens/AdminCategoryScreen.jsx'
+import AdminCustomerListScreen from './screens/adminScreens/AdminCustomerListScreen.jsx'
 import store from './store.js'
 import {Provider} from 'react-redux'
 
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path="/admin" element={<AdminPrivateRoute />}>
         <Route index element={<AdminHomeScreen />} />
         <Route index path="category" element={<AdminCategoryScreen/>}></Route>
+        <Route index path="selection" element={<AdminCustomerListScreen/>}></Route>
 
       </Route>
       <Route path="/admin/login" element={<AdminLoginScreen />} />

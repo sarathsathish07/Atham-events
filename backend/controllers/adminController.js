@@ -2,6 +2,15 @@ import asyncHandler from "express-async-handler";
 import generateAdminToken from "../utils/generateAdminToken.js";
 import Category from "../models/categorySchema.js";
 import Item from "../models/itemsSchema.js";
+import Selection from "../models/selectionSchema.js";
+import mongoose from "mongoose";
+import PDFDocument from "pdfkit";
+import path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+
 
 const credentials = {
   email: "admin@gmail.com",
@@ -86,6 +95,80 @@ const addItems = asyncHandler(async(req,res)=>{
   }
 
 })
+const getAllSelections = async (req, res) => {
+  try {
+      const selections = await Selection.find({});
+      res.status(200).json(selections);
+  } catch (error) {
+      res.status(500).json({ message: "Failed to fetch selections", error: error.message });
+  }
+};
+
+const getSelectionById = async (req, res) => {
+  const { id } = req.params;
+  try {
+      const selection = await Selection.findById(id);
+      if (!selection) {
+          return res.status(404).json({ message: "Selection not found" });
+      }
+      res.status(200).json(selection);
+  } catch (error) {
+      res.status(500).json({ message: "Failed to fetch selection", error: error.message });
+  }
+};
+
+// Generate and download a PDF for a specific selection
+const downloadSelectionPDF = async (req, res) => {
+  const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid ID format" });
+  }
+
+  try {
+    const selection = await Selection.findById(id);
+    if (!selection) {
+      return res.status(404).json({ message: "Selection not found" });
+    }
+
+    const { name, phone, email, selections } = selection;
+
+    const doc = new PDFDocument({ autoFirstPage: false });
+    const logoPath = path.resolve('backend/public/Atham_Logo2.png');
+
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", `attachment; filename=${name}_selections.pdf`);
+
+    doc.pipe(res);
+
+    const addPageWithWatermark = () => {
+      doc.addPage();
+      const { width, height } = doc.page;
+      doc.image(logoPath, width / 2 - 100, height / 2 - 100, { width: 200, opacity: 0.8 });
+    };
+
+    addPageWithWatermark();
+
+    doc.fontSize(14).text(`Client Name: ${name}`, 50, 50);
+    doc.text(`Phone: ${phone}`, 50, 70);
+    doc.text(`Email: ${email}`, 50, 90);
+    doc.moveDown(2);
+
+    selections.forEach((item, index) => {
+      if (doc.y > doc.page.height - 100) {
+        addPageWithWatermark();
+      }
+      doc.fontSize(12).text(`${index + 1}. ${item.category}`);
+      item.items.forEach((subItem) => {
+        doc.fontSize(10).text(`    • ${subItem}`);
+      });
+      doc.moveDown(1);
+    });
+
+    doc.end();
+  } catch (error) {
+    console.error("Error generating PDF:", error.message);
+  }
+};
 
 
 
@@ -93,4 +176,7 @@ const addItems = asyncHandler(async(req,res)=>{
 
 
 
-export { authAdmin, logoutAdmin,getCategories,addCategories,addItems };
+
+
+
+export { authAdmin, logoutAdmin,getCategories,addCategories,addItems,getAllSelections,getSelectionById,downloadSelectionPDF};

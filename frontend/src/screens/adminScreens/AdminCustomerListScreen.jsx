@@ -10,29 +10,38 @@ function AdminCustomerListScreen() {
     const { data: selections = [], isLoading } = useFetchSelectionsQuery();
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [showModal, setShowModal] = useState(false);
+    const [loadingId, setLoadingId] = useState(null);
 
     const handlePreview = (id) => {
         setSelectedCustomer(id);
         setShowModal(true);
     };
 
-    const handleDownload = async () => {
-        if (!selectedCustomer) return;
+ 
+
+    const handleDownload = async (id) => {
+        setLoadingId(id);
         try {
-            const { data } = await useFetchSelectionByIdQuery(selectedCustomer).unwrap();
-            const doc = new jsPDF();
-            doc.text(`Customer Name: ${data.name}`, 10, 10);
-            doc.text(`Phone: ${data.phone}`, 10, 20);
-            doc.text(`Email: ${data.email}`, 10, 30);
-            data.selections.forEach((selection, index) => {
-                doc.text(`${selection.category}: ${selection.items.join(", ")}`, 10, 40 + index * 10);
-            });
-            doc.save("customer_selection.pdf");
+            const response = await fetch(`/api/admin/selections/${id}/download`);
+            if (!response.ok) throw new Error("Failed to fetch the PDF");
+    
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "customer_selection.pdf");
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
             toast.success("PDF downloaded successfully.");
         } catch (error) {
             toast.error("Failed to download PDF.");
+        } finally {
+            setLoadingId(null);
         }
     };
+    
+  
 
     return (
         <>
@@ -65,12 +74,13 @@ function AdminCustomerListScreen() {
                                                 View Details
                                             </Button>
                                             <Button
-                                                variant="secondary"
-                                                onClick={handleDownload}
-                                                disabled={!selectedCustomer}
-                                            >
-                                                Download PDF
-                                            </Button>
+    variant="secondary"
+    disabled={loadingId === selection._id}
+    onClick={() => handleDownload(selection._id)}
+>
+    {loadingId === selection._id ? "Downloading..." : "Download PDF"}
+</Button>
+
                                         </Card.Body>
                                     </Card>
                                 </Col>
