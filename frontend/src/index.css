@@ -215,13 +215,21 @@
 }
 
 .category-card:hover {
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .category-card.selected {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
+.category-card.selected {
+  background-color: rgba(186, 138, 40,1 );  /* Light background color */
+}
+
+.category-card.selected .category-card-body {
+  color: #BA8A28;  /* Text color */
+}
+
 
 .admin-sidebar {
   /* width: 250px; */
@@ -349,5 +357,18 @@
 
 .about-btn:hover {
   background-color: #003f7f;
+}
+
+.header-row {
+  display: flex;
+  /* align-items: center; */
+  font-weight: bold;
+  background-color: #f2f2f2; /* Light gray */
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.header-row > div {
+  text-align: center;
 }
 

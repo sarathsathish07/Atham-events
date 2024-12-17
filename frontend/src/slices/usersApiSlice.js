@@ -44,6 +44,10 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data
       })
     }),
+    fetchAllCategoriesWithItems: builder.query({
+      query: () => `${USERS_URL}/categories-with-items`, 
+    }),
+    
   
   })
 })
@@ -56,5 +60,6 @@ export const {
   useUpdateUserMutation,
   useFetchCategoryQuery,
   useFetchItemsByCategoryQuery ,
-  useSubmitSelectionMutation
+  useSubmitSelectionMutation,
+  useFetchAllCategoriesWithItemsQuery
 } = usersApiSlice

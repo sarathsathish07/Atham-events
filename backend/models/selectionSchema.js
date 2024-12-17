@@ -7,7 +7,12 @@ const selectionSchema = new mongoose.Schema({
   selections: [
     {
       category: { type: String, required: true },
-      items: [{ type: String, required: true }]
+      items: [
+        {
+          itemName: { type: String, required: true },
+          quantity: { type: Number, required: true, default: 1 },
+        }
+      ]
     }
   ],
 }, {

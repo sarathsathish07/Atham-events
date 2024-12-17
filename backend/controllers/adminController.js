@@ -74,7 +74,7 @@ const addCategories = asyncHandler(async(req,res)=>{
 const addItems = asyncHandler(async(req,res)=>{
   console.log("1");
   
-  const { name, categoryId } = req.body;
+  const { name, categoryId,amount } = req.body;
 
   const existingCategory = await Category.findById(categoryId);
   if (!existingCategory) {
@@ -84,7 +84,7 @@ const addItems = asyncHandler(async(req,res)=>{
   try {
       const newItem = new Item({
           itemName:name,
-        
+          amount:amount,
           category:categoryId,
       });
 
@@ -117,7 +117,6 @@ const getSelectionById = async (req, res) => {
   }
 };
 
-// Generate and download a PDF for a specific selection
 const downloadSelectionPDF = async (req, res) => {
   const { id } = req.params;
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -159,7 +158,7 @@ const downloadSelectionPDF = async (req, res) => {
       }
       doc.fontSize(12).text(`${index + 1}. ${item.category}`);
       item.items.forEach((subItem) => {
-        doc.fontSize(10).text(`    • ${subItem}`);
+        doc.fontSize(10).text(`    • ${subItem.itemName} (Quantity: ${subItem.quantity})`);
       });
       doc.moveDown(1);
     });
@@ -169,6 +168,7 @@ const downloadSelectionPDF = async (req, res) => {
     console.error("Error generating PDF:", error.message);
   }
 };
+
 
 
 

@@ -11,8 +11,8 @@ const App = () => {
   const isAdminPage=location.pathname.startsWith('/admin')
   return (
     <>
-   {/* {isAdminPage? <AdminHeader/> : <Header/>}
-    <ToastContainer/> */}
+   {/* /* {isAdminPage? <AdminHeader/> : <Header/>} */}
+    <ToastContainer/> 
       <Outlet/>
     </>
   )

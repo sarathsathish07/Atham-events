@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Button, ListGroup, Row, Col, Card, Container } from "react-bootstrap";
+import { Form, Button, ListGroup, Row, Col, Card } from "react-bootstrap";
 import { useFetchCategoriesQuery, useAddCategoryMutation, useAddItemMutation } from "../../slices/adminApiSlice.js";
 import { toast } from "react-toastify";
 import AdminSidebar from "../../components/adminComponents/AdminSidebar";
@@ -9,6 +9,7 @@ function AdminCategoryScreen() {
     const [categoryName, setCategoryName] = useState("");
     const [itemName, setItemName] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
+    const [amount, setAmount] = useState(""); 
 
     const { data: categories = [], isLoading } = useFetchCategoriesQuery();
     const [addCategory, { isLoading: isAddingCategory }] = useAddCategoryMutation();
@@ -32,28 +33,37 @@ function AdminCategoryScreen() {
     const handleAddItem = async (e) => {
         e.preventDefault();
         if (!itemName.trim() || !selectedCategory) {
-            toast.error("Both item name and category are required.");
+            toast.error("All fields are required.");
+            return;
+        }
+        if (!amount.trim()) {
+            toast.error("Amount is required.");
             return;
         }
         try {
-            await addItem({ name: itemName, categoryId: selectedCategory }).unwrap();
+            await addItem({
+                name: itemName,
+                categoryId: selectedCategory,
+                amount,
+            }).unwrap();
             toast.success("Item added successfully");
             setItemName("");
             setSelectedCategory("");
+            setAmount(""); 
         } catch (error) {
             toast.error("Failed to add item");
         }
     };
+    
 
     return (
         <>
             <AdminHeader />
-            <Row style={{backgroundColor:""}}>
+            <Row>
                 <Col md={2}>
                     <AdminSidebar />
                 </Col>
                 <Col md={9}>
-             
                     <Row className="p-5">
                         {/* Add Category Card */}
                         <Col md={6}>
@@ -113,6 +123,16 @@ function AdminCategoryScreen() {
                                                 ))}
                                             </Form.Control>
                                         </Form.Group>
+                                        <Form.Group controlId="amount" className="mt-3">
+    <Form.Label>Amount</Form.Label>
+    <Form.Control
+        type="text" 
+        placeholder="Enter amount"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+    />
+</Form.Group>
+
                                         <Button
                                             type="submit"
                                             variant="primary"

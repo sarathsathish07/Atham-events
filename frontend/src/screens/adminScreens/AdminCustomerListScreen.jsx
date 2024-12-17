@@ -129,12 +129,20 @@ function PreviewDetails({ customerId }) {
             <ul>
                 {data.selections.map((selection, index) => (
                     <li key={index}>
-                        <strong>{selection.category}:</strong> {selection.items.join(", ")}
+                        <strong>{selection.category}:</strong>
+                        <ul>
+                            {selection.items.map((item, idx) => (
+                                <li key={idx}>
+                                    {item.itemName} (Quantity: {item.quantity})
+                                </li>
+                            ))}
+                        </ul>
                     </li>
                 ))}
             </ul>
         </>
     );
 }
+
 
 export default AdminCustomerListScreen;
